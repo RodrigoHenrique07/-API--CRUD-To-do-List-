@@ -4,6 +4,7 @@ const TaskModel = require("../models/task.model");
 
 const {notFoundError, objectIdCastError} = require("../errors/mongodb.errors");
 const { notAllowedFieldsToUpdateError } = require("../errors/general.erros");
+
 class TaskController {
     constructor(req, res) {
         this.req = req;

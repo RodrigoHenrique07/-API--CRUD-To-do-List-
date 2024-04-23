@@ -15,20 +15,14 @@ class UserController {
     async login() {
         try {
             const { email, password } = this.req.body;
-            const user = await UserModel.findOne({ email: email });
+            const user = await UserModel.findOne({ email, password });
+    
             if (!user) {
                 return this.res
                     .status(400)
-                    .send({ message: "Usuário não encontrado." });
+                    .send({ message: "Usuário não encontrado ou senha incorreta." });
             }
-            const isMatch = password === user.password;
-
-            if (!isMatch) {
-                return this.res
-                    .status(400)
-                    .send({ message: "Senha incorreta." });
-            }
-
+    
             this.res.status(200).send({
                 message: "Login bem-sucedido!",
                 user: {
