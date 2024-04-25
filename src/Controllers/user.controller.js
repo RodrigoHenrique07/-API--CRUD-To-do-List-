@@ -5,6 +5,7 @@ const {
     objectIdCastError,
 } = require("../errors/mongodb.errors");
 const { notAllowedFieldsToUpdateError } = require("../errors/general.erros");
+const { EmailAlreadyInUseError, NameAlreadyInUseError } = require("../errors/user.erros");
 
 class UserController {
     constructor(req, res) {
@@ -68,6 +69,23 @@ class UserController {
 
     async createUser() {
         try {
+
+            const {email, username} = this.req.body;
+            const alredyEmail = await UserModel.findOne({email})
+            const alredyName = await UserModel.findOne({username})
+            
+
+            if(alredyEmail){
+                
+                return EmailAlreadyInUseError(this.res, email)
+            }
+
+            if(alredyName){
+                
+                return NameAlreadyInUseError(this.res)
+            }
+
+
             const newUser = new UserModel(this.req.body);
             await newUser.save();
             this.res.status(201).send(newUser);
